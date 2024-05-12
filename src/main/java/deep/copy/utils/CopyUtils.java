@@ -3,6 +3,7 @@ package deep.copy.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class CopyUtils {
                 logger.warn("Object does not have fields. No need to make deepCopy!");
                 return obj;
             }
-            Map<String, Object> nameValueMap = getClassFields(aClass, obj);
+            Map<String, Object> nameValueMap = getClassFields(aClass, obj, "");
             Map<String, Object> clonedObjects = cloneObject(nameValueMap);
 
             Pair<? extends Constructor<?>> aConstructor = getConstructor(aClass);
@@ -88,7 +89,7 @@ public class CopyUtils {
         }
     }
 
-    private static <C> Map<String, Object> getClassFields(Class<?> aClass, C obj) throws NoSuchFieldException, IllegalAccessException {
+    private static <C> Map<String, Object> getClassFields(Class<?> aClass, C obj, String prefix) throws NoSuchFieldException, IllegalAccessException {
 
         Map<String, Object> newClassMapFields = new HashMap<>();
         for (Field declaredField : aClass.getDeclaredFields()) {
@@ -96,7 +97,20 @@ public class CopyUtils {
             Class<?> type = declaredField.getType();
             String fieldName = declaredField.getName();
             Object valueObject = declaredField.get(obj);
-            newClassMapFields.put(fieldName, valueObject);
+
+            if (valueObject != null) {
+                Class<?>[] interfaces = valueObject.getClass().getInterfaces();
+                boolean contains = Arrays.asList(valueObject.getClass().getInterfaces()).contains(Serializable.class);
+                if (!contains && !Utils.isPrimitive(valueObject)) {
+                    Class<?> aNestedClass = valueObject.getClass();
+                    Map<String, Object> nestedClassMapFields = getClassFields(aNestedClass, valueObject, "." + fieldName);
+                    newClassMapFields.putAll(nestedClassMapFields);
+                } else
+                    newClassMapFields.put(fieldName + prefix, valueObject);
+            }
+            else {
+                newClassMapFields.put(fieldName + prefix, null);
+            }
         }
         return newClassMapFields;
     }

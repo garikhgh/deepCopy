@@ -33,4 +33,10 @@ public class Utils {
         }
     }
 
+    public static boolean isPrimitive(Object obj) {
+        return obj instanceof Integer || obj instanceof Double || obj instanceof Character ||
+                obj instanceof Boolean || obj instanceof Byte || obj instanceof Short ||
+                obj instanceof Long || obj instanceof Float;
+    }
+
 }
