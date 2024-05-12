@@ -1,16 +1,16 @@
 package deep.copy.domain;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
-public class Man implements Serializable{
+public class Man {
 
 
     private String name;
     private int age;
     private List<String> favoriteBooks;
     private Man man;
+    private Woman woman;
     private Instant instant = Instant.now();
 
 

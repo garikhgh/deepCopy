@@ -1,5 +1,6 @@
 package deep.copy.utils;
 
+import java.io.*;
 import java.lang.reflect.Field;
 
 public class Utils {
@@ -10,6 +11,26 @@ public class Utils {
     public static boolean checkIfObjectHasFields(Class<?> aClass) {
         Field[] declaredFields = aClass.getDeclaredFields();
         return declaredFields.length == 0;
+    }
+
+    public static Object deserialize(byte[] obj) {
+        try {
+            return new ObjectInputStream(new ByteArrayInputStream(obj)).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] serialize(final Object obj) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(bos);
+            out.writeObject(obj);
+            out.flush();
+            return bos.toByteArray();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }

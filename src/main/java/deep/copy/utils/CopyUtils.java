@@ -3,7 +3,6 @@ package deep.copy.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -13,6 +12,7 @@ public class CopyUtils {
         throw new ExceptionInInitializerError("Not allowed to create an instance!");
     }
 
+    //todo: handle circular reference
     private static final Logger logger = LoggerFactory.getLogger(CopyUtils.class);
 
 
@@ -21,7 +21,6 @@ public class CopyUtils {
         try {
 
             Class<?> aClass = Class.forName(obj.getClass().getName());
-
 
             if (Utils.checkIfObjectHasFields(aClass)) {
                 logger.warn("Object does not have fields. No need to make deepCopy!");
@@ -75,11 +74,6 @@ public class CopyUtils {
         return false;
     }
 
-    private static Object[] checkIfNotPrimitiveType(Object[] args) {
-        // todo: in not primitive type then create new object
-        return args;
-    }
-
     private static <C> void setClonedFieldsIntoNewClassInstance(Map<String, Object> clonedObjects, C newObject) {
         try {
             Class<?> aClass = Class.forName(newObject.getClass().getName());
@@ -107,30 +101,11 @@ public class CopyUtils {
         return newClassMapFields;
     }
 
-    private static byte[] serialize(final Object obj) {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(bos);
-            out.writeObject(obj);
-            out.flush();
-            return bos.toByteArray();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private static Object deserialize(byte[] obj) {
-        try {
-            return new ObjectInputStream(new ByteArrayInputStream(obj)).readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static Map<String, Object> cloneObject(Map<String, Object> map) {
-        byte[] serialize = serialize(map);
+        byte[] serialize = Utils.serialize(map);
         @SuppressWarnings("unchecked")
-        Map<String, Object> deserialize = (Map<String, Object>) deserialize(serialize);
+        Map<String, Object> deserialize = (Map<String, Object>) Utils.deserialize(serialize);
         return deserialize;
     }
 
@@ -160,27 +135,5 @@ public class CopyUtils {
         constructorPair.setHasDefaultConstructor(isPresent);
         return constructorPair;
     }
-
-    private static class Pair<T> {
-        public T constructor;
-        public boolean hasDefaultConstructor;
-
-        public T getConstructor() {
-            return constructor;
-        }
-
-        public void setConstructor(T constructor) {
-            this.constructor = constructor;
-        }
-
-        public boolean isHasDefaultConstructor() {
-            return hasDefaultConstructor;
-        }
-
-        public void setHasDefaultConstructor(boolean hasDefaultConstructor) {
-            this.hasDefaultConstructor = hasDefaultConstructor;
-        }
-    }
-
 
 }

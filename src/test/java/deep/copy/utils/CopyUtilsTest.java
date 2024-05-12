@@ -17,6 +17,11 @@ class CopyUtilsTest {
         Man mockMan = getMockMan();
         Man man = CopyUtils.deepCopy(mockMan);
         assertNotEquals(mockMan, man);
+        List<String> favoriteBooks = mockMan.getFavoriteBooks();
+        favoriteBooks.add("Java");
+        List<String> favoriteBooks1 = man.getFavoriteBooks();
+        // the size should be different, as the references are not the same
+        assertNotEquals(favoriteBooks.size(), favoriteBooks1.size());
     }
 
     @Test
@@ -24,6 +29,12 @@ class CopyUtilsTest {
         Woman mockWoman = getMockWoman();
         Woman woman = CopyUtils.deepCopy(mockWoman);
         assertNotEquals(mockWoman, woman);
+
+        List<String> favoriteBooks = mockWoman.getFavoriteBooks();
+        favoriteBooks.add("Java");
+        List<String> favoriteBooks1 = woman.getFavoriteBooks();
+        // the size should be different, as the references are not the same
+        assertNotEquals(favoriteBooks.size(), favoriteBooks1.size());
     }
 
     @Test
@@ -35,22 +46,23 @@ class CopyUtilsTest {
     }
 
     private Man getMockMan() {
-        List<String> favoriteBooks = new ArrayList<>();
-        favoriteBooks.add("Think and grow rich!");
-        favoriteBooks.add("Effective Java.");
-        favoriteBooks.add("Kafka!");
+        List<String> favoriteBooks = getFavoriteBooks();
         return new Man("Joe", 22, favoriteBooks);
     }
 
     private Woman getMockWoman() {
+        List<String> favoriteBooks = getFavoriteBooks();
         Woman woman = new Woman();
         woman.setAge(22);
         woman.setName("Nataly");
-        woman.setFavoriteBooks(List.of("Think and grow rich!", "Effective Java.", "Kafka."));
+        woman.setFavoriteBooks(favoriteBooks);
         return woman;
     }
-
-    private class RandomClass{
-
+    private List<String> getFavoriteBooks() {
+        List<String> favoriteBooks = new ArrayList<>();
+        favoriteBooks.add("Think and grow rich!");
+        favoriteBooks.add("Effective Java.");
+        favoriteBooks.add("Kafka!");
+        return favoriteBooks;
     }
 }

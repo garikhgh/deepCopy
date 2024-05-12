@@ -8,8 +8,8 @@ public class Woman {
     private int age;
     private List<String> favoriteBooks;
     private Instant instant = Instant.now();
-    private Man man = new Man("Gve", 33, List.of("Java"));
-
+    // this case is not handled
+//    private Man man = new Man("Gve", 33, List.of("Java"));
 
 
     public String getName() {
