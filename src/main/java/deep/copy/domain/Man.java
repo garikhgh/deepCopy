@@ -1,13 +1,18 @@
 package deep.copy.domain;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 
-public class Man {
+public class Man implements Serializable{
+
 
     private String name;
     private int age;
     private List<String> favoriteBooks;
+    private Man man;
+    private Instant instant = Instant.now();
+
 
     public Man(String name, int age, List<String> favoriteBooks) {
         this.name = name;

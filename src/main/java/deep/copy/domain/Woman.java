@@ -1,11 +1,15 @@
 package deep.copy.domain;
 
+import java.time.Instant;
 import java.util.List;
 
 public class Woman {
     private String name;
     private int age;
     private List<String> favoriteBooks;
+    private Instant instant = Instant.now();
+    private Man man = new Man("Gve", 33, List.of("Java"));
+
 
 
     public String getName() {

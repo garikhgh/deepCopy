@@ -1,9 +1,11 @@
 package deep.copy.utils;
 
 import deep.copy.domain.Man;
+import deep.copy.domain.RandomEmptyClass;
 import deep.copy.domain.Woman;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,24 +16,30 @@ class CopyUtilsTest {
     void deepCopyWithConstructor() {
         Man mockMan = getMockMan();
         Man man = CopyUtils.deepCopy(mockMan);
+        assertNotEquals(mockMan, man);
     }
 
     @Test
     void deepCopyWithDefaultConstructor() {
         Woman mockWoman = getMockWoman();
         Woman woman = CopyUtils.deepCopy(mockWoman);
+        assertNotEquals(mockWoman, woman);
     }
 
     @Test
     void deepCopyWithoutFields() {
-        RandomClass randomClass = new RandomClass();
-        RandomClass rc = CopyUtils.deepCopy(randomClass);
+        RandomEmptyClass randomClass = new RandomEmptyClass();
+        RandomEmptyClass rc = CopyUtils.deepCopy(randomClass);
         // checking the references. they should be the same
         assertEquals(rc, randomClass);
     }
 
     private Man getMockMan() {
-        return new Man("Joe", 22, List.of("Think and grow rich!", "Effective Java.", "Kafka."));
+        List<String> favoriteBooks = new ArrayList<>();
+        favoriteBooks.add("Think and grow rich!");
+        favoriteBooks.add("Effective Java.");
+        favoriteBooks.add("Kafka!");
+        return new Man("Joe", 22, favoriteBooks);
     }
 
     private Woman getMockWoman() {
