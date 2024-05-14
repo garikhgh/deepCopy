@@ -103,13 +103,13 @@ public class CopyUtils {
                 boolean contains = Arrays.asList(valueObject.getClass().getInterfaces()).contains(Serializable.class);
                 if (!contains && !Utils.isPrimitive(valueObject)) {
                     Class<?> aNestedClass = valueObject.getClass();
-                    Map<String, Object> nestedClassMapFields = getClassFields(aNestedClass, valueObject, "." + fieldName);
+                    Map<String, Object> nestedClassMapFields = getClassFields(aNestedClass, valueObject, fieldName + ".");
                     newClassMapFields.putAll(nestedClassMapFields);
                 } else
-                    newClassMapFields.put(fieldName + prefix, valueObject);
+                    newClassMapFields.put(prefix + fieldName, valueObject);
             }
             else {
-                newClassMapFields.put(fieldName + prefix, null);
+                newClassMapFields.put(prefix + fieldName, null);
             }
         }
         return newClassMapFields;
